@@ -32,6 +32,8 @@ async function run() {
 
 
     const userCollection = client.db("ReelRadarDB").collection("users");
+    const toWatchCollection = client.db("ReelRadarDB").collection("toWatch");
+    const updatesCollection = client.db("ReelRadarDB").collection("updates");
 
 
 
@@ -41,6 +43,24 @@ async function run() {
 
     app.get("/users", async (req, res) => {
         const cursor = userCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+      });
+
+
+      // To Watch
+
+    app.get("/towatch", async (req, res) => {
+        const cursor = toWatchCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+      });
+
+
+      // Updates
+
+    app.get("/updates", async (req, res) => {
+        const cursor = updatesCollection.find();
         const result = await cursor.toArray();
         res.send(result);
       });
