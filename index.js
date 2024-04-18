@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 require("dotenv").config();
 const app = express();
@@ -56,6 +56,13 @@ async function run() {
         res.send(result);
       });
 
+      app.get('/towatch/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) }
+        const result = await toWatchCollection.findOne(query)
+        res.send(result);
+    })
+
 
       // Updates
 
@@ -93,9 +100,9 @@ run().catch(console.dir);
 
 
 app.get("/", (req, res) => {
-    res.send("Tourist server is running");
+    res.send("Reel Radar server is running");
   });
   
   app.listen(port, () => {
-    console.log(`Tourist server is running on port ${port}`);
+    console.log(`Reel Radar server is running on port ${port}`);
   });
