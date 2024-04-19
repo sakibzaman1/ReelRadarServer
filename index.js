@@ -34,6 +34,7 @@ async function run() {
     const userCollection = client.db("ReelRadarDB").collection("users");
     const toWatchCollection = client.db("ReelRadarDB").collection("toWatch");
     const updatesCollection = client.db("ReelRadarDB").collection("updates");
+    const watchlistCollection = client.db("ReelRadarDB").collection("watchlist");
 
 
 
@@ -61,7 +62,16 @@ async function run() {
         const query = { _id: new ObjectId(id) }
         const result = await toWatchCollection.findOne(query)
         res.send(result);
-    })
+    });
+
+    // Watchlist
+
+    app.get("/watchlist", async (req, res) => {
+      const cursor = watchlistCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
 
 
       // Updates
@@ -83,6 +93,30 @@ async function run() {
         const result = await userCollection.insertOne(user);
         res.send(result);
       });
+
+      // Watchlist
+
+      app.post('/watchlist', async(req, res)=> {
+        const myAddedFilm = req.body;
+        console.log(myAddedFilm);
+        const result = await watchlistCollection.insertOne(myAddedFilm);
+        res.send(result);
+      });
+
+      app.get("/watchlist", async (req, res) => {
+        const email = req.query.email;
+        const query = {email: email};
+        const cursor = watchlistCollection.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      });
+  
+      app.get('/watchlist/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) }
+        const result = await watchlistCollection.findOne(query)
+        res.send(result);
+    });
 
 
     // Send a ping to confirm a successful connection
