@@ -49,6 +49,14 @@ async function run() {
         res.send(result);
       });
 
+      app.get('/users/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) }
+        const result = await userCollection.findOne(query)
+        res.send(result);
+    });
+
+
 
       // To Watch
 
@@ -72,6 +80,22 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
+    app.get("/watchlist", async (req, res) => {
+      const email = req.query.email;
+      const query = {email: email};
+      const cursor = watchlistCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get('/watchlist/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await watchlistCollection.findOne(query)
+      res.send(result);
+  });
+
 
 
 
@@ -126,20 +150,30 @@ async function run() {
         });
       });
 
-      app.get("/watchlist", async (req, res) => {
-        const email = req.query.email;
-        const query = {email: email};
-        const cursor = watchlistCollection.find(query);
-        const result = await cursor.toArray();
-        res.send(result);
-      });
-  
-      app.get('/watchlist/:id', async (req, res) => {
-        const id = req.params.id;
-        const query = { _id: new ObjectId(id) }
-        const result = await watchlistCollection.findOne(query)
-        res.send(result);
+   
+
+    // Delete Data
+
+    // Watchlist
+
+    
+    app.delete("/watchlist/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await watchlistCollection.deleteOne(query);
+      res.send(result);
     });
+
+    // Users
+
+    app.delete('/users/:id', async(req, res)=> {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await userCollection.deleteOne(query);
+      res.send(result);
+    });
+
+
 
 
     // Send a ping to confirm a successful connection
