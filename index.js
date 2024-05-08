@@ -36,6 +36,7 @@ async function run() {
     const toWatchCollection = client.db("ReelRadarDB").collection("toWatch");
     const updatesCollection = client.db("ReelRadarDB").collection("updates");
     const watchlistCollection = client.db("ReelRadarDB").collection("watchlist");
+    const reviewCollection = client.db("ReelRadarDB").collection("reviews");
 
 
 
@@ -72,6 +73,21 @@ async function run() {
         const result = await toWatchCollection.findOne(query)
         res.send(result);
     });
+
+    // Reviews
+
+    app.get("/reviews", async (req, res) => {
+      const cursor = reviewCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get('/reviews/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await toWatchCollection.findOne(query)
+      res.send(result);
+  });
 
     // Watchlist
 
@@ -116,6 +132,14 @@ async function run() {
     app.post("/users", async(req, res) => {
         const user = req.body;
         const result = await userCollection.insertOne(user);
+        res.send(result);
+      });
+
+      // Reviews
+
+    app.post("/reviews", async(req, res) => {
+        const review = req.body;
+        const result = await reviewCollection.insertOne(review);
         res.send(result);
       });
 
